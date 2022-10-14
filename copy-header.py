@@ -110,11 +110,11 @@ class DocX:
             )
         contentTypes.getroottree().write(self._contentTypesPath, xml_declaration=True, encoding="utf-8", standalone=True, pretty_print=True)
 
-    def _getMaxId(self, root):
+    def _getMaxId(self, root, attr: str):
         idMax = 1
         idPrefix = ''
         for child in root:
-            id = child.attrib['Id']
+            id = child.attrib[attr]
             idParts = re.match(r'(\D+)(\d+)', id, re.I).groups()
             # print(f'[DocX._getMaxId] idParts: {idParts}')
             idPrefix = idParts[0]
@@ -127,7 +127,7 @@ class DocX:
         return f'{idPrefix}{idMax}'
 
     def _docRelsAppendHeader(self, dstRoot, header):
-        headerId = self._getMaxId(dstRoot)
+        headerId = self._getMaxId(root = dstRoot, attr = 'Id')
         header.set('Id', headerId)
         dstRoot.append(header)
         return headerId
